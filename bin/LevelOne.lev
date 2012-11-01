@@ -1,0 +1,88 @@
+<GameState name="Untitled Level">
+  <CitrusObject name="patch" className="com.citrusengine.objects.platformer.Hero">
+    <Property name="acceleration">1</Property>
+    <Property name="maxVelocity">8</Property>
+    <Property name="jumpHeight">14</Property>
+    <Property name="jumpAcceleration">0.9</Property>
+    <Property name="killVelocity">3</Property>
+    <Property name="enemySpringHeight">10</Property>
+    <Property name="enemySpringJumpHeight">12</Property>
+    <Property name="hurtDuration">1000</Property>
+    <Property name="hurtVelocityX">6</Property>
+    <Property name="hurtVelocityY">10</Property>
+    <Property name="canDuck">true</Property>
+    <Property name="enemyClass">com.citrusengine.objects.platformer.Baddy</Property>
+    <Property name="friction">0.75</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">91</Property>
+    <Property name="y">223.5</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view">art/patch.swf</Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="width">59.8</Property>
+    <Property name="height">118.75</Property>
+  </CitrusObject>
+  <CitrusObject name="ground" className="com.citrusengine.objects.platformer.Platform">
+    <Property name="oneWay">false</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">334</Property>
+    <Property name="y">348</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="width">554</Property>
+    <Property name="height">30</Property>
+  </CitrusObject>
+  <CitrusObject name="resetSensor" className="com.citrusengine.objects.platformer.Sensor">
+    <Property name="width">1139</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">336.5</Property>
+    <Property name="y">510.5</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="height">89</Property>
+  </CitrusObject>
+  <CitrusObject name="Coin7" className="com.citrusengine.objects.platformer.Coin">
+    <Property name="collectorClass">com.citrusengine.objects.platformer.Hero</Property>
+    <Property name="width">31</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">301</Property>
+    <Property name="y">209</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view">art/jewel.png</Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="height">44</Property>
+  </CitrusObject>
+  <CitrusObject name="Coin8" className="com.citrusengine.objects.platformer.Coin">
+    <Property name="collectorClass">com.citrusengine.objects.platformer.Hero</Property>
+    <Property name="width">31</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">350</Property>
+    <Property name="y">209</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view">art/jewel.png</Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="height">44</Property>
+  </CitrusObject>
+</GameState>
