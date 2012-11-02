@@ -45,7 +45,8 @@ package
 			}
 			
 			_resetSensor = getObjectByName("resetSensor") as Sensor;
-			_resetSensor.onBeginContact.add(resetLevel);
+			if(_resetSensor)
+				_resetSensor.onBeginContact.add(resetLevel);
 		}
 		
 		private function resetLevel(e:ContactEvent):void {
