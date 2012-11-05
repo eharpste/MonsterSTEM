@@ -1,4 +1,4 @@
-<GameState name="Untitled Level">
+<GameState name="example">
   <CitrusObject name="deep background" className="com.citrusengine.objects.CitrusSprite">
     <Property name="x">400</Property>
     <Property name="y">300</Property>
@@ -47,6 +47,7 @@
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">1</Property>
+    <Property name="view"></Property>
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
@@ -61,6 +62,7 @@
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">1</Property>
+    <Property name="view"></Property>
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
@@ -75,6 +77,7 @@
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">1</Property>
+    <Property name="view"></Property>
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
@@ -89,6 +92,7 @@
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">1</Property>
+    <Property name="view"></Property>
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
@@ -114,8 +118,8 @@
     <Property name="collectorClass">com.citrusengine.objects.platformer.Hero</Property>
     <Property name="width">30</Property>
     <Property name="gravity">1.6</Property>
-    <Property name="x">395</Property>
-    <Property name="y">165</Property>
+    <Property name="x">396</Property>
+    <Property name="y">163</Property>
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">1</Property>

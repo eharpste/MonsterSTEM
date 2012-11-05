@@ -111,6 +111,9 @@ package com.citrusengine.view
 			if (!(citrusObject is _viewInterface))
 				return;
 			
+			if ((citrusObject as _viewInterface).view == null)
+				return;
+				
 			var art:Object = createArt(citrusObject);
 			
 			if (art)

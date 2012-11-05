@@ -1,0 +1,44 @@
+<GameState name="GoldSpike">
+  <CitrusObject name="platform" className="com.citrusengine.objects.platformer.Platform">
+    <Property name="oneWay">false</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">634.5</Property>
+    <Property name="y">413.5</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="width">787</Property>
+    <Property name="height">57</Property>
+  </CitrusObject>
+  <CitrusObject name="Monster1" className="edu.cmu.monsterstem.objects.Monster">
+    <Property name="acceleration">1</Property>
+    <Property name="maxVelocity">8</Property>
+    <Property name="jumpHeight">14</Property>
+    <Property name="jumpAcceleration">0.9</Property>
+    <Property name="killVelocity">3</Property>
+    <Property name="enemySpringHeight">10</Property>
+    <Property name="enemySpringJumpHeight">12</Property>
+    <Property name="hurtDuration">1000</Property>
+    <Property name="hurtVelocityX">6</Property>
+    <Property name="hurtVelocityY">10</Property>
+    <Property name="canDuck">true</Property>
+    <Property name="enemyClass">com.citrusengine.objects.platformer.Baddy</Property>
+    <Property name="friction">0.75</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">497</Property>
+    <Property name="y">180</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="width">64</Property>
+    <Property name="height">106</Property>
+  </CitrusObject>
+</GameState>

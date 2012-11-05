@@ -1,4 +1,4 @@
-<GameState name="Untitled Level">
+<GameState name="LevelOne">
   <CitrusObject name="patch" className="com.citrusengine.objects.platformer.Hero">
     <Property name="acceleration">1</Property>
     <Property name="maxVelocity">8</Property>
@@ -34,26 +34,12 @@
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">0</Property>
-    <Property name="view"></Property>
+    <Property name="view">art/bg_hills.png</Property>
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
     <Property name="width">554</Property>
     <Property name="height">30</Property>
-  </CitrusObject>
-  <CitrusObject name="resetSensor" className="com.citrusengine.objects.platformer.Sensor">
-    <Property name="width">1139</Property>
-    <Property name="gravity">1.6</Property>
-    <Property name="x">336.5</Property>
-    <Property name="y">510.5</Property>
-    <Property name="parallax">1</Property>
-    <Property name="rotation">0</Property>
-    <Property name="group">0</Property>
-    <Property name="view"></Property>
-    <Property name="offsetX">0</Property>
-    <Property name="offsetY">0</Property>
-    <Property name="registration">center</Property>
-    <Property name="height">89</Property>
   </CitrusObject>
   <CitrusObject name="Coin7" className="com.citrusengine.objects.platformer.Coin">
     <Property name="collectorClass">com.citrusengine.objects.platformer.Hero</Property>
@@ -84,5 +70,19 @@
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
     <Property name="height">44</Property>
+  </CitrusObject>
+  <CitrusObject name="resetSensor" className="com.citrusengine.objects.platformer.Sensor">
+    <Property name="width">1461</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">403.5</Property>
+    <Property name="y">527.5</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="height">73</Property>
   </CitrusObject>
 </GameState>

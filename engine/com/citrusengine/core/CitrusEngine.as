@@ -226,5 +226,23 @@
 				trace("Warning: " + objectName + " has no parameter named " + paramName + ".");
 			}
 		}
+		
+		public static var debug:Boolean = false;
+		private static var debugCodes:Object = { };
+		
+		public static function activateDebugCode(code:String):void {
+			debugCodes[code] = true;
+		}
+		
+		public static function deactivateDebugCode(code:String):void {
+			debugCodes[code] = false;
+		}
+		
+		public static function dbg(message:String, code:String=""):void {
+			if (debug) {
+				if (code == "" || debugCodes[code] == true)
+					trace("<" + code + "> " + message);
+			}
+		}
 	}
 }
