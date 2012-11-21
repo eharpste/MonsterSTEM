@@ -1,15 +1,16 @@
 package  edu.cmu.monsterstem.state 
 {
-	import Box2DAS.Dynamics.ContactEvent;
+	import Box2D.Dynamics.Contacts.b2Contact;
 	import com.citrusengine.core.State;
 	import com.citrusengine.math.MathVector;
-	import com.citrusengine.objects.platformer.Hero;
-	import com.citrusengine.objects.platformer.Sensor;
-	import com.citrusengine.physics.Box2D;
-	import com.citrusengine.utils.ObjectMaker;
+	import com.citrusengine.objects.platformer.box2d.Hero;
+	import com.citrusengine.objects.platformer.box2d.Sensor;
+	import com.citrusengine.physics.box2d.Box2D;
+	import com.citrusengine.utils.ObjectMaker2D;
 	import com.citrusengine.core.CitrusEngine;
 	import com.citrusengine.core.CitrusObject;
 	import com.citrusengine.view.ISpriteView;
+	import com.citrusengine.objects.Box2DPhysicsObject;
 	
 	public class ExampleState extends State
 	{
@@ -35,7 +36,7 @@ package  edu.cmu.monsterstem.state
 			
 			//Create the level objects from the XML file.
 			if (_levelData)
-				ObjectMaker.FromLevelArchitect(_levelData);
+				ObjectMaker2D.FromLevelArchitect(_levelData);
 			
 			//Find the hero object, and make it the camera target if it exists.
 			_hero = getFirstObjectByType(Hero) as Hero;
@@ -57,8 +58,9 @@ package  edu.cmu.monsterstem.state
 			}
 		}
 		
-		private function resetLevel(e:ContactEvent):void {
-			if (e.other.GetBody().GetUserData() is Hero) {
+		private function resetLevel(contact:b2Contact):void {
+			var other:Box2DPhysicsObject =  Box2DPhysicsObject.CollisionGetOther(_resetSensor, contact);
+			if (other is Hero) {
 				CitrusEngine.getInstance().state = new ExampleState(_levelData);
 			}
 		}

@@ -53,11 +53,11 @@ package edu.cmu.monsterstem.objects.parts
 		
 		public var onAnimationChange:Signal;
 		
-		public function set type(value:String):void {
+		public function set species(value:String):void {
 			_type = value;
 		}
 		
-		public function get type():String {
+		public function get species():String {
 			return _type;
 		}
 		
@@ -77,6 +77,14 @@ package edu.cmu.monsterstem.objects.parts
 		
 		public function get y():Number {
 			return _y;
+		}
+		
+		public function get z():Number {
+			return 0;
+		}
+		
+		public function get depth():Number {
+			return 0;
 		}
 		
 		[Property(value="0")]
@@ -238,7 +246,7 @@ package edu.cmu.monsterstem.objects.parts
 			this.y = _parent.y;
 			this.rotation = _parent.rotation;
 			this._inverted = _parent.inverted;
-			CitrusEngine.dbg("view is: " + view, this,"viewcheck");
+			//CitrusEngine.dbg("view is: " + view, this,"viewcheck");
 		}
 		
 		override public function update(timeDelta:Number):void {
@@ -248,8 +256,12 @@ package edu.cmu.monsterstem.objects.parts
 		
 		private function handleAnimationChange():void {
 			_animation = type + "-" + _parent.animation;
-			CitrusEngine.dbg("animation: " + _animation, this);
+			//CitrusEngine.dbg("animation: " + _animation, this);
 			onAnimationChange.dispatch();
+		}
+		
+		public function getBody():* {
+			return _parent.getBody();
 		}
 	}
 }

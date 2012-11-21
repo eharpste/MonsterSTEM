@@ -1,13 +1,14 @@
 package edu.cmu.monsterstem.objects 
 {
-	import Box2DAS.Common.V2;
-	import Box2DAS.Dynamics.b2Fixture;
-	import Box2DAS.Dynamics.ContactEvent;
+	import Box2D.Collision.b2Manifold;
+	import Box2D.Dynamics.Contacts.b2Contact;
+	import Box2D.Common.Math.b2Vec2;
+	import Box2D.Dynamics.b2Fixture;
 	import com.citrusengine.math.MathVector;
-	import com.citrusengine.objects.PhysicsObject;
-	import com.citrusengine.objects.platformer.Baddy;
-	import com.citrusengine.objects.platformer.Platform;
-	import com.citrusengine.physics.CollisionCategories;
+	import com.citrusengine.objects.Box2DPhysicsObject;
+	import com.citrusengine.objects.platformer.box2d.Enemy;
+	import com.citrusengine.objects.platformer.box2d.Platform;
+	import com.citrusengine.objects.platformer.box2d.Crate;
 	import com.citrusengine.utils.Box2DShapeMaker;
 	import edu.cmu.monsterstem.objects.parts.MonsterPart;
 	import flash.utils.clearTimeout;
@@ -15,6 +16,8 @@ package edu.cmu.monsterstem.objects
 	import flash.utils.setTimeout;
 	import org.osflash.signals.Signal;
 	import com.citrusengine.core.CitrusEngine;
+	import com.citrusengine.physics.PhysicsCollisionCategories;
+	import flash.geom.Point;
 	
 	/**
 	 * This is the main class for Monsters, its starting as a copy of the Hero
@@ -26,17 +29,17 @@ package edu.cmu.monsterstem.objects
 	 * the actual animation.
 	 * @author Erik Harpstead
 	 */
-	public class Monster extends PhysicsObject {
+	public class Monster extends Box2DPhysicsObject {
 		private var legs:MonsterPart;
 		private var armf:MonsterPart;
 		private var armb:MonsterPart;
 		private var head:MonsterPart;
 		//private var misc:MonsterPart;
 		
-		public static const RIGHT:V2 = new V2(1, 0);
-		public static const LEFT:V2 = new V2( -1, 0);
-		public static const UP:V2 = new V2(0, 1);
-		public static const DOWN:V2 = new V2(0, -1);
+		public static const RIGHT:b2Vec2 = new b2Vec2(1, 0);
+		public static const LEFT:b2Vec2 = new b2Vec2( -1, 0);
+		public static const UP:b2Vec2 = new b2Vec2(0, 1);
+		public static const DOWN:b2Vec2 = new b2Vec2(0, -1);
 		
 		//properties
 		/**
@@ -131,7 +134,7 @@ package edu.cmu.monsterstem.objects
 		public var onAnimationChange:Signal;
 		
 		protected var _groundContacts:Array = [];//Used to determine if he's on ground or not.
-		protected var _enemyClass:Class = Baddy;
+		protected var _enemyClass:Class = Enemy;
 		protected var _onGround:Boolean = false;
 		protected var _springOffEnemy:Number = -1;
 		protected var _hurtTimeoutID:Number;
@@ -142,7 +145,7 @@ package edu.cmu.monsterstem.objects
 		//protected var _ducking:Boolean = false;
 		protected var _combinedGroundAngle:Number = 0;
 		protected var _walking:Boolean = false;
-		protected var _walkingDirection:V2 = RIGHT;
+		protected var _walkingDirection:b2Vec2 = RIGHT;
 		protected var _jumping:Boolean = false;
 		protected var _active:Boolean = true;
 		
@@ -182,19 +185,17 @@ package edu.cmu.monsterstem.objects
 			
 			_ce.state.add(legs);
 			_ce.state.add(armb);
-			_ce.state.add(abmf);
+			_ce.state.add(armf);
 			_ce.state.add(head);
 		}
 		
 		override public function destroy():void {
-			_fixture.removeEventListener(ContactEvent.PRE_SOLVE, handlePreSolve);
-			_fixture.removeEventListener(ContactEvent.BEGIN_CONTACT, handleBeginContact);
-			_fixture.removeEventListener(ContactEvent.END_CONTACT, handleEndContact);
 			clearTimeout(_hurtTimeoutID);
 			onJump.removeAll();
 			onGiveDamage.removeAll();
 			onTakeDamage.removeAll();
-			onAnimationChange.removeAll()
+			onAnimationChange.removeAll();
+			
 			super.destroy();
 		}
 		
@@ -237,7 +238,7 @@ package edu.cmu.monsterstem.objects
 			}
 		}
 		
-		public function get walkingDirection():V2 {
+		public function get walkingDirection():b2Vec2 {
 			if (_walkingDirection.x >= 0)
 				return RIGHT;
 			else {
@@ -290,7 +291,7 @@ package edu.cmu.monsterstem.objects
 		override public function update(timeDelta:Number):void {
 			super.update(timeDelta);
 			
-			var velocity:V2 = _body.GetLinearVelocity();
+			var velocity:b2Vec2 = _body.GetLinearVelocity();
 			
 			//if the monster is active, we'll see if active is really a thing or not.
 			if (_active) {
@@ -299,12 +300,12 @@ package edu.cmu.monsterstem.objects
 				if (_walking) {
 					//if the walking direction is to the right add to the velocity.
 					if(_walkingDirection.x >= 0) {
-						velocity = V2.add(velocity, getSlopeBasedMoveAngle());
+						velocity.Add(getSlopeBasedMoveAngle());
 					}
 					
 					//otherwise if the walking direction to the left subtract from the velocity.
 					else if (_walkingDirection.x < 0) {
-						velocity = V2.subtract(velocity, getSlopeBasedMoveAngle());
+						velocity.Subtract(getSlopeBasedMoveAngle());
 					}
 				}
 				
@@ -362,7 +363,7 @@ package edu.cmu.monsterstem.objects
 			updateAnimation();
 		}
 		
-		public function walk(direction:V2 = null):void {
+		public function walk(direction:b2Vec2 = null):void {
 			if (direction == null)
 				direction = RIGHT;
 			_walkingDirection = direction;
@@ -372,7 +373,7 @@ package edu.cmu.monsterstem.objects
 		
 		public function turnAround():void {
 			if (_walking) {
-				_walkingDirection.multiplyN( -1);
+				_walkingDirection.NegativeSelf();
 			}
 		}
 		
@@ -428,42 +429,30 @@ package edu.cmu.monsterstem.objects
 			super.defineFixture();
 			_fixtureDef.friction = _friction;
 			_fixtureDef.restitution = 0;
-			_fixtureDef.filter.categoryBits = CollisionCategories.Get("GoodGuys");
-			_fixtureDef.filter.maskBits = CollisionCategories.GetAll();
+			_fixtureDef.filter.categoryBits = PhysicsCollisionCategories.Get("GoodGuys");
+			_fixtureDef.filter.maskBits = PhysicsCollisionCategories.GetAll();
 		}
 		
-		override protected function createFixture():void {
-			super.createFixture();
-			_fixture.m_reportPreSolve = true;
-			_fixture.m_reportBeginContact = true;
-			_fixture.m_reportEndContact = true;
-			_fixture.addEventListener(ContactEvent.PRE_SOLVE, handlePreSolve);
-			_fixture.addEventListener(ContactEvent.BEGIN_CONTACT, handleBeginContact);
-			_fixture.addEventListener(ContactEvent.END_CONTACT, handleEndContact);
-		}
-		
-		protected function handlePreSolve(e:ContactEvent):void {
-			/*if (!_ducking)
-				return;*/
+		override public function handlePreSolve(contact:b2Contact, oldManifold:b2Manifold):void {
 				
-			var other:PhysicsObject = e.other.GetBody().GetUserData() as PhysicsObject;
+			var other:Box2DPhysicsObject =  Box2DPhysicsObject.CollisionGetOther(this, contact);
 			
 			var heroTop:Number = y;
 			var objectBottom:Number = other.y + (other.height / 2);
 			
 			if (objectBottom < heroTop)
-				e.contact.Disable();
+				contact.SetEnabled(false);
 		}
 		
-		protected function handleBeginContact(e:ContactEvent):void {
-			var collider:PhysicsObject = e.other.GetBody().GetUserData();
+		override public function handleBeginContact(contact:b2Contact):void {
+			var collider:Box2DPhysicsObject = Box2DPhysicsObject.CollisionGetOther(this, contact);
 			
 			if (_enemyClass && collider is _enemyClass) {
 				if (_body.GetLinearVelocity().y < killVelocity && !_hurt) {
 					hurt();
 					
 					//fling the hero
-					var hurtVelocity:V2 = _body.GetLinearVelocity();
+					var hurtVelocity:b2Vec2 = _body.GetLinearVelocity();
 					hurtVelocity.y = -hurtVelocityY;
 					hurtVelocity.x = hurtVelocityX;
 					if (collider.x > x)
@@ -478,26 +467,24 @@ package edu.cmu.monsterstem.objects
 			
 			
 			//Collision angle
-			if (e.normal) { //The normal property doesn't come through all the time. I think doesn't come through against sensors. {
-				var collisionAngle:Number = new MathVector(e.normal.x, e.normal.y).angle * 180 / Math.PI;
-				if (collisionAngle > 45 && collisionAngle < 135) {
-					_groundContacts.push(e.other);
+			if (contact.GetManifold().m_localPoint) { //The normal property doesn't come through all the time. I think doesn't come through against sensors. {
+				var normalPoint:Point = new Point(contact.GetManifold().m_localPoint.x, contact.GetManifold().m_localPoint.y);
+				var collisionAngle:Number = new MathVector(normalPoint.x, normalPoint.y).angle * 180 / Math.PI;
+				
+				if ((collisionAngle > 45 && collisionAngle < 135) || collisionAngle == -90 || collider is Crate)
+				{
+					_groundContacts.push(collider.body.GetFixtureList());
 					_onGround = true;
-					_jumping = false;
 					updateCombinedGroundAngle();
-				}
-				else {
-					/*if(e.other.GetBody().GetUserData() is Platform) {
-						turnAround();
-						CitrusEngine.dbg("collisionAngle: " + collisionAngle, this);
-					}*/
 				}
 			}
 		}
 		
-		protected function handleEndContact(e:ContactEvent):void {
+		override public function handleEndContact(contact:b2Contact):void {
+			var collider:Box2DPhysicsObject = Box2DPhysicsObject.CollisionGetOther(this, contact);
+			
 			//Remove from ground contacts, if it is one.
-			var index:int = _groundContacts.indexOf(e.other);
+			var index:int = _groundContacts.indexOf(collider.body.GetFixtureList());
 			if (index != -1) {
 				_groundContacts.splice(index, 1);
 				if (_groundContacts.length == 0)
@@ -506,8 +493,8 @@ package edu.cmu.monsterstem.objects
 			}
 		}
 		
-		protected function getSlopeBasedMoveAngle():V2 {
-			return new V2(acceleration, 0).rotate(_combinedGroundAngle);
+		protected function getSlopeBasedMoveAngle():b2Vec2 {
+			return Box2DPhysicsObject.Rotateb2Vec2(new b2Vec2(acceleration, 0), _combinedGroundAngle);
 		}
 		
 		protected function updateCombinedGroundAngle():void {
@@ -517,7 +504,11 @@ package edu.cmu.monsterstem.objects
 				return;
 			
 			for each (var contact:b2Fixture in _groundContacts)
-				_combinedGroundAngle += contact.GetBody().GetAngle();
+				var angle:Number = contact.GetBody().GetAngle();
+				
+			var turn:Number = 45 * Math.PI / 180;
+			angle = angle % turn;
+			_combinedGroundAngle += angle;
 			_combinedGroundAngle /= _groundContacts.length;
 		}
 		
@@ -529,7 +520,7 @@ package edu.cmu.monsterstem.objects
 		protected function updateAnimation():void {
 			var prevAnimation:String = _animation;
 			
-			var velocity:V2 = _body.GetLinearVelocity();
+			var velocity:b2Vec2 = _body.GetLinearVelocity();
 			if (_hurt) {
 				_animation = "hurt";
 			}

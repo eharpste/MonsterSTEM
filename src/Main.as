@@ -3,16 +3,16 @@ package
 	import com.citrusengine.core.CitrusEngine;
 	import com.citrusengine.core.CitrusObject;
 	import com.citrusengine.objects.CitrusSprite;
-	import com.citrusengine.objects.PhysicsObject;
-	import com.citrusengine.objects.platformer.Baddy;
-	import com.citrusengine.objects.platformer.Coin;
-	import com.citrusengine.objects.platformer.Crate;
-	import com.citrusengine.objects.platformer.Hero;
-	import com.citrusengine.objects.platformer.Missile;
-	import com.citrusengine.objects.platformer.MovingPlatform;
-	import com.citrusengine.objects.platformer.Platform;
-	import com.citrusengine.objects.platformer.RewardBox;
-	import com.citrusengine.objects.platformer.Sensor;
+	import com.citrusengine.objects.Box2DPhysicsObject;
+	import com.citrusengine.objects.platformer.box2d.Enemy;
+	import com.citrusengine.objects.platformer.box2d.Coin;
+	import com.citrusengine.objects.platformer.box2d.Crate;
+	import com.citrusengine.objects.platformer.box2d.Hero;
+	import com.citrusengine.objects.platformer.box2d.Missile;
+	import com.citrusengine.objects.platformer.box2d.MovingPlatform;
+	import com.citrusengine.objects.platformer.box2d.Platform;
+	import com.citrusengine.objects.platformer.box2d.RewardBox;
+	import com.citrusengine.objects.platformer.box2d.Sensor;
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -40,7 +40,7 @@ package
 		{
 			super();
 			
-			var classes:Array = [Baddy, CitrusSprite, Coin, Crate, Hero, Missile, MovingPlatform, PhysicsObject, Platform, RewardBox, Sensor, Monster,MonsterGenerator];
+			var classes:Array = [Enemy, CitrusSprite, Coin, Crate, Hero, Missile, MovingPlatform, Box2DPhysicsObject, Platform, RewardBox, Sensor, Monster,MonsterGenerator];
 			//console.openKey = Keyboard.F1; 
 			console.addCommand("load", handlePlayCommand);
 			console.addCommand("play", handlePlayCommand);
@@ -122,10 +122,10 @@ package
 		}
 		
 		private function handleDebugCommand(arg:String):void {
-			if (arg == "true")
+		/*	if (arg == "true")
 				debug = true;
 			else if (arg == "false")
-				debug = false;
+				debug = false;*/
 		}
 		
 		public function displayText(message:String, append:Boolean = false):void {

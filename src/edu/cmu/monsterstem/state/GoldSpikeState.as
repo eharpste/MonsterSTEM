@@ -1,17 +1,18 @@
 package edu.cmu.monsterstem.state
 {
-	import Box2DAS.Dynamics.ContactEvent;
-	import com.citrusengine.objects.platformer.Sensor;
-	import com.citrusengine.physics.Box2D;
+	import Box2D.Dynamics.Contacts.b2Contact;
+	import com.citrusengine.objects.platformer.box2d.Sensor;
+	import com.citrusengine.physics.box2d.Box2D;
 	import com.citrusengine.core.CitrusEngine;
 	import com.citrusengine.core.State;
-	import com.citrusengine.utils.ObjectMaker;
+	import com.citrusengine.utils.ObjectMaker2D;
 	import com.citrusengine.core.CitrusObject;
 	import com.citrusengine.view.ISpriteView;
 	import edu.cmu.monsterstem.objects.Monster;
 	import edu.cmu.monsterstem.objects.MonsterGenerator;
 	import flash.events.SecurityErrorEvent;
 	import flash.utils.getQualifiedClassName;
+	import com.citrusengine.objects.Box2DPhysicsObject;
 	/**
 	 * ...
 	 * @author Erik Harpstead
@@ -40,7 +41,7 @@ package edu.cmu.monsterstem.state
 			box2D.visible = true;
 			
 			if (_levelData)
-				ObjectMaker.FromLevelArchitect(_levelData);
+				ObjectMaker2D.FromLevelArchitect(_levelData);
 			
 			_walkSensorR = getObjectByName("rightSensor") as Sensor;
 			_walkSensorL = getObjectByName("leftSensor") as Sensor;
@@ -51,9 +52,9 @@ package edu.cmu.monsterstem.state
 			_walkSensorL.onBeginContact.add(startWalkLeft);
 			_jumpSensor.onBeginContact.add(startJump);
 			
-			for each (var co:CitrusObject in getObjectsByType(CitrusObject)) {
+			/*for each (var co:CitrusObject in getObjectsByType(CitrusObject)) {
 				CitrusEngine.dbg(co.name + " : " + (co is ISpriteView ? (co as ISpriteView).view : ""),this,"viewcheck");
-			}
+			}*/
 		}
 		
 		override public function update(timeDelta:Number):void {
@@ -69,23 +70,27 @@ package edu.cmu.monsterstem.state
 			_spawner.spawnMonster();
 		}
 		
-		private function startWalkRight(e:ContactEvent):void {
-			CitrusEngine.dbg("startWalk() other is :" + getQualifiedClassName(e.other.GetBody().GetUserData()),this,"sensor");
-			if (e.other.GetBody().GetUserData() is Monster) {
-				(e.other.GetBody().GetUserData() as Monster).walk(Monster.RIGHT);
+		private function startWalkRight(contact:b2Contact):void {
+			var other:Box2DPhysicsObject =  Box2DPhysicsObject.CollisionGetOther(_walkSensorR, contact);
+			
+			//	CitrusEngine.dbg("startWalk() other is :" + getQualifiedClassName(e.other.GetBody().GetUserData()),this,"sensor");
+			if (other is Monster) {
+				(other as Monster).walk(Monster.RIGHT);
 			}
 		}
 		
-		private function startWalkLeft(e:ContactEvent):void {
-			CitrusEngine.dbg("startWalk() other is :" + getQualifiedClassName(e.other.GetBody().GetUserData()), this,"sensor");
-			if (e.other.GetBody().GetUserData() is Monster) {
-				(e.other.GetBody().GetUserData() as Monster).walk(Monster.LEFT);
+		private function startWalkLeft(contact:b2Contact):void {
+			var other:Box2DPhysicsObject =  Box2DPhysicsObject.CollisionGetOther(_walkSensorL, contact);
+			//	CitrusEngine.dbg("startWalk() other is :" + getQualifiedClassName(e.other.GetBody().GetUserData()), this,"sensor");
+			if (other is Monster) {
+				(other as Monster).walk(Monster.LEFT);
 			}
 		}
 		
-		private function startJump(e:ContactEvent):void {
-			if (e.other.GetBody().GetUserData() is Monster) {
-				(e.other.GetBody().GetUserData() as Monster).jump();
+		private function startJump(contact:b2Contact):void {
+			var other:Box2DPhysicsObject =  Box2DPhysicsObject.CollisionGetOther(_jumpSensor, contact);
+			if (other is Monster) {
+				(other as Monster).jump();
 			}
 		}
 	}
