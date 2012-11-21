@@ -1,20 +1,44 @@
 package edu.cmu.monsterstem.objects.parts 
 {
 	import com.citrusengine.core.CitrusObject;
+	import com.citrusengine.core.CitrusEngine;
 	import com.citrusengine.view.ISpriteView;
 	import edu.cmu.monsterstem.objects.Monster;
+	import edu.cmu.monsterstem.objects.MonsterGenerator;
 	import flash.display.MovieClip;
+	import org.osflash.signals.Signal;
 	/**
 	 * ...
 	 * @author Erik Harpstead
 	 */
 	public class MonsterPart extends CitrusObject implements ISpriteView{
-		private var _parent:Monster;
-		private var frames:Array;
 		
+		/*[Embed(source = "/./art/Patch.swf", mimeType="application/octet-stream")]
+		private static var legSwf:Class;/**/
+		//private static var legSwf:String = "/./art/Patch_legs.swf";
+		public static var legSwf:*;
+		
+		/*[Embed(source = "/./art/Patch_armFront.swf", mimeType="application/octet-stream")]
+		private static var armFrontSwf:Class;/**/
+		//private static var armFrontSwf:String = "/./art/Patch_armFront.swf";
+		public static var armFrontSwf:*;
+		
+		/*[Embed(source = "/./art/Patch_armBack.swf", mimeType="application/octet-stream")]
+		private static var armBackSwf:Class;/**/
+		//private static var armBackSwf:String = "/./art/Patch_armBack.swf";
+		public static var armBackSwf:*;
+		
+		/*[Embed(source = "/./art/Patch_body.swf", mimeType="application/octet-stream")]
+		private static var bodySwf:Class;/**/
+		//private static var bodySwf:String = "/./art/Patch_body.swf";
+		public static var bodySwf:*;
+		
+		private var _parent:Monster;
 		
 		private var _x:Number;
 		private var _y:Number;
+		private var _height:Number;
+		private var _width:Number;
 		private var _parallax:Number;
 		private var _rotation:Number;
 		private var _group:Number;
@@ -25,6 +49,17 @@ package edu.cmu.monsterstem.objects.parts
 		private var _offsetX:Number;
 		private var _offsetY:Number;
 		private var _registration:String;
+		private var _type:String;
+		
+		public var onAnimationChange:Signal;
+		
+		public function set type(value:String):void {
+			_type = value;
+		}
+		
+		public function get type():String {
+			return _type;
+		}
 		
 		[Property(value="0")]
 		public function set x(value:Number):void {
@@ -42,6 +77,24 @@ package edu.cmu.monsterstem.objects.parts
 		
 		public function get y():Number {
 			return _y;
+		}
+		
+		[Property(value="0")]
+		public function set width(value:Number):void {
+			_width = value;
+		}
+		
+		public function get width():Number {
+			return _width;
+		}
+		
+		[Property(value="0")]
+		public function set height(value:Number):void {
+			_height = value;
+		}
+		
+		public function get height():Number {
+			return _height;
 		}
 		
 		[Property(value="1")]
@@ -133,16 +186,51 @@ package edu.cmu.monsterstem.objects.parts
 			syncToParent();
 		}
 		
-		public static function Make(name:String, x:Number, y:Number, width:Number, height:Number, view:* = null):MonsterPart {
+		public static function Make(name:String, x:Number, y:Number, width:Number, height:Number, view:* = null, type:String="bat"):MonsterPart {
 			if (view == null) view = MovieClip;
-			return new MonsterPart(name, { x: x, y: y, width: width, height: height, view: view } );
+			return new MonsterPart(name, { x: x, y: y, width: width, height: height, view: view, type: type} );
 		}
+		
+		public static function MakeLegs(name:String, x:Number, y:Number, width:Number, height:Number, type:String = "bat"):MonsterPart {
+			return Make(name, x, y, width, height, legSwf,type);
+		}
+		
+		public static function RandomLegs(name:String, x:Number, y:Number, width:Number, height:Number):MonsterPart {
+			return Make(name, x, y, width, height, legSwf, MonsterGenerator.randomType());
+		}
+		
+		public static function MakeFrontArm(name:String, x:Number, y:Number, width:Number, height:Number, type:String = "bat"):MonsterPart {
+			return Make(name, x, y, width, height, armFrontSwf);
+		}
+		
+		public static function RandomFrontArm(name:String, x:Number, y:Number, width:Number, height:Number):MonsterPart {
+			return Make(name, x, y, width, height, armFrontSwf, MonsterGenerator.randomType());
+		}
+		
+		public static function MakeBackArm(name:String, x:Number, y:Number, width:Number, height:Number, type:String = "bat"):MonsterPart {
+			return Make(name, x, y, width, height, armBackSwf);
+		}
+		
+		public static function RandomBackArm(name:String, x:Number, y:Number, width:Number, height:Number):MonsterPart {
+			return Make(name, x, y, width, height, armBackSwf, MonsterGenerator.randomType());
+		}
+		
+		public static function MakeBody(name:String, x:Number, y:Number, width:Number, height:Number, type:String = "bat"):MonsterPart {
+			return Make(name, x, y, width, height, bodySwf);
+		}
+		
+		public static function RandomBody(name:String, x:Number, y:Number, width:Number, height:Number):MonsterPart {
+			return Make(name, x, y, width, height, bodySwf, MonsterGenerator.randomType());
+		}
+		
+		/*public static function Duplicate(master:MonsterPart):MonsterPart {
+			var view:* = master.view
+		}*/
 		
 		public function MonsterPart(name:String, params:Object)  {
 			super(name, params);
-			if (view is MovieClip) {
-				frames = (view as MovieClip).currentLabels;
-			}
+			
+			onAnimationChange = new Signal();
 		}
 		
 		private function syncToParent():void {
@@ -150,6 +238,7 @@ package edu.cmu.monsterstem.objects.parts
 			this.y = _parent.y;
 			this.rotation = _parent.rotation;
 			this._inverted = _parent.inverted;
+			CitrusEngine.dbg("view is: " + view, this,"viewcheck");
 		}
 		
 		override public function update(timeDelta:Number):void {
@@ -157,11 +246,10 @@ package edu.cmu.monsterstem.objects.parts
 			syncToParent();
 		}
 		
-		private function handleAnimationChange(newAnimation:String):void {
-			if (frames.indexOf(newAnimation) == -1) {
-				newAnimation = "default";
-			}
-			_animation = newAnimation;
+		private function handleAnimationChange():void {
+			_animation = type + "-" + _parent.animation;
+			CitrusEngine.dbg("animation: " + _animation, this);
+			onAnimationChange.dispatch();
 		}
 	}
 }

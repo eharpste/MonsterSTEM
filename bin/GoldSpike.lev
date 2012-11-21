@@ -1,9 +1,9 @@
 <GameState name="GoldSpike">
-  <CitrusObject name="platform" className="com.citrusengine.objects.platformer.Platform">
+  <CitrusObject name="ground" className="com.citrusengine.objects.platformer.Platform">
     <Property name="oneWay">false</Property>
     <Property name="gravity">1.6</Property>
-    <Property name="x">634.5</Property>
-    <Property name="y">413.5</Property>
+    <Property name="x">608</Property>
+    <Property name="y">486.5</Property>
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">0</Property>
@@ -11,26 +11,25 @@
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
-    <Property name="width">787</Property>
+    <Property name="width">1088</Property>
     <Property name="height">57</Property>
   </CitrusObject>
-  <CitrusObject name="Monster1" className="edu.cmu.monsterstem.objects.Monster">
-    <Property name="acceleration">1</Property>
-    <Property name="maxVelocity">8</Property>
-    <Property name="jumpHeight">14</Property>
-    <Property name="jumpAcceleration">0.9</Property>
-    <Property name="killVelocity">3</Property>
-    <Property name="enemySpringHeight">10</Property>
-    <Property name="enemySpringJumpHeight">12</Property>
-    <Property name="hurtDuration">1000</Property>
-    <Property name="hurtVelocityX">6</Property>
-    <Property name="hurtVelocityY">10</Property>
-    <Property name="canDuck">true</Property>
-    <Property name="enemyClass">com.citrusengine.objects.platformer.Baddy</Property>
-    <Property name="friction">0.75</Property>
+  <CitrusObject name="generator" className="edu.cmu.monsterstem.objects.MonsterGenerator">
+    <Property name="maxMonsters">1</Property>
+    <Property name="x">153.5</Property>
+    <Property name="y">201</Property>
+    <Property name="width">100</Property>
+    <Property name="height">100</Property>
+    <Property name="armsFrontView">art/Patch_armFront.swf</Property>
+    <Property name="armsBackView">art/Patch_armBack.swf</Property>
+    <Property name="bodyView">art/Patch_body.swf</Property>
+    <Property name="legView">art/Patch_legs.swf</Property>
+  </CitrusObject>
+  <CitrusObject name="rightSensor" className="com.citrusengine.objects.platformer.Sensor">
+    <Property name="width">28</Property>
     <Property name="gravity">1.6</Property>
-    <Property name="x">497</Property>
-    <Property name="y">180</Property>
+    <Property name="x">119</Property>
+    <Property name="y">405</Property>
     <Property name="parallax">1</Property>
     <Property name="rotation">0</Property>
     <Property name="group">0</Property>
@@ -38,7 +37,64 @@
     <Property name="offsetX">0</Property>
     <Property name="offsetY">0</Property>
     <Property name="registration">center</Property>
-    <Property name="width">64</Property>
-    <Property name="height">106</Property>
+    <Property name="height">104</Property>
+  </CitrusObject>
+  <CitrusObject name="jumpSensor" className="com.citrusengine.objects.platformer.Sensor">
+    <Property name="width">30</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">602</Property>
+    <Property name="y">399.5</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="height">103</Property>
+  </CitrusObject>
+  <CitrusObject name="Platform5" className="com.citrusengine.objects.platformer.Platform">
+    <Property name="oneWay">false</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">1137</Property>
+    <Property name="y">336.5</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="width">30</Property>
+    <Property name="height">243</Property>
+  </CitrusObject>
+  <CitrusObject name="Platform6" className="com.citrusengine.objects.platformer.Platform">
+    <Property name="oneWay">false</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">79</Property>
+    <Property name="y">334</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="width">30</Property>
+    <Property name="height">250</Property>
+  </CitrusObject>
+  <CitrusObject name="leftSensor" className="com.citrusengine.objects.platformer.Sensor">
+    <Property name="width">30</Property>
+    <Property name="gravity">1.6</Property>
+    <Property name="x">1104</Property>
+    <Property name="y">408</Property>
+    <Property name="parallax">1</Property>
+    <Property name="rotation">0</Property>
+    <Property name="group">0</Property>
+    <Property name="view"></Property>
+    <Property name="offsetX">0</Property>
+    <Property name="offsetY">0</Property>
+    <Property name="registration">center</Property>
+    <Property name="height">100</Property>
   </CitrusObject>
 </GameState>

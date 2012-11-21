@@ -2,6 +2,7 @@
 {
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.utils.getQualifiedClassName;
 	
 	/**
 	 * CitrusEngine is the top-most class in the library. When you start your project, you should make your
@@ -238,10 +239,15 @@
 			debugCodes[code] = false;
 		}
 		
-		public static function dbg(message:String, code:String=""):void {
+		public static function dbg(message:String, source:*=null, code:String=""):void {
 			if (debug) {
-				if (code == "" || debugCodes[code] == true)
-					trace("<" + code + "> " + message);
+				if (code == "" || debugCodes[code] == true) {
+					if (source == null)
+						source = _instance;
+					var className:String = getQualifiedClassName(source);
+					className = className.substr(className.lastIndexOf(":")+1);
+					trace("<" + className + "> {" + code + "} " + message);
+				}
 			}
 		}
 	}

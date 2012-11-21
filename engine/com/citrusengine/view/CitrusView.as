@@ -1,6 +1,7 @@
 package com.citrusengine.view
 {
 	import com.citrusengine.core.CitrusEngine;
+	import com.citrusengine.core.CitrusObject;
 	import com.citrusengine.math.MathVector;
 	import com.citrusengine.utils.LoadManager;
 	import flash.display.Sprite;
@@ -111,8 +112,10 @@ package com.citrusengine.view
 			if (!(citrusObject is _viewInterface))
 				return;
 			
-			if ((citrusObject as _viewInterface).view == null)
+			if ((citrusObject as _viewInterface).view == null) {
+				//trace((citrusObject as CitrusObject).name);
 				return;
+			}
 				
 			var art:Object = createArt(citrusObject);
 			

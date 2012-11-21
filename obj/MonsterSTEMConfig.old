@@ -14,7 +14,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'11/4/2012'</value>
+      <value>'11/16/2012'</value>
     </define>
     <source-path append="true">
       <path-element>C:\Users\eharpste\Documents\Game Project Files\MonsterSTEM\engine</path-element>
@@ -34,7 +34,7 @@
   <default-background-color>#FFFFFF</default-background-color>
   <default-frame-rate>30</default-frame-rate>
   <default-size>
-    <width>800</width>
-    <height>600</height>
+    <width>1024</width>
+    <height>768</height>
   </default-size>
 </flex-config>

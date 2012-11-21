@@ -25,6 +25,8 @@ package
 	import edu.cmu.monsterstem.state.ExampleState;
 	import edu.cmu.monsterstem.state.GoldSpikeState;
 	import edu.cmu.monsterstem.objects.Monster;
+	import edu.cmu.monsterstem.objects.TaggedSensor
+	import edu.cmu.monsterstem.objects.MonsterGenerator;
 	
 	public class Main extends CitrusEngine {
 		public var instructionText:TextField;
@@ -38,7 +40,7 @@ package
 		{
 			super();
 			
-			var classes:Array = [Baddy, CitrusSprite, Coin, Crate, Hero, Missile, MovingPlatform, PhysicsObject, Platform, RewardBox, Sensor, Monster];
+			var classes:Array = [Baddy, CitrusSprite, Coin, Crate, Hero, Missile, MovingPlatform, PhysicsObject, Platform, RewardBox, Sensor, Monster,MonsterGenerator];
 			//console.openKey = Keyboard.F1; 
 			console.addCommand("load", handlePlayCommand);
 			console.addCommand("play", handlePlayCommand);

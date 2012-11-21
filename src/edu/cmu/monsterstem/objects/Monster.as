@@ -1,20 +1,21 @@
 package edu.cmu.monsterstem.objects 
 {
 	import Box2DAS.Common.V2;
-	import Box2DAS.Dynamics.ContactEvent;
 	import Box2DAS.Dynamics.b2Fixture;
+	import Box2DAS.Dynamics.ContactEvent;
 	import com.citrusengine.math.MathVector;
 	import com.citrusengine.objects.PhysicsObject;
+	import com.citrusengine.objects.platformer.Baddy;
+	import com.citrusengine.objects.platformer.Platform;
 	import com.citrusengine.physics.CollisionCategories;
 	import com.citrusengine.utils.Box2DShapeMaker;
-	import com.citrusengine.objects.platformer.Baddy;
 	import edu.cmu.monsterstem.objects.parts.MonsterPart;
-	import org.osflash.signals.Signal;
-	import flash.media.Video;
-	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.setTimeout;
+	import org.osflash.signals.Signal;
+	import com.citrusengine.core.CitrusEngine;
+	
 	/**
 	 * This is the main class for Monsters, its starting as a copy of the Hero
 	 * class that is included in the platformer citrus library. We only need
@@ -27,9 +28,15 @@ package edu.cmu.monsterstem.objects
 	 */
 	public class Monster extends PhysicsObject {
 		private var legs:MonsterPart;
-		private var arms:MonsterPart;
+		private var armf:MonsterPart;
+		private var armb:MonsterPart;
 		private var head:MonsterPart;
 		//private var misc:MonsterPart;
+		
+		public static const RIGHT:V2 = new V2(1, 0);
+		public static const LEFT:V2 = new V2( -1, 0);
+		public static const UP:V2 = new V2(0, 1);
+		public static const DOWN:V2 = new V2(0, -1);
 		
 		//properties
 		/**
@@ -98,6 +105,8 @@ package edu.cmu.monsterstem.objects
 		[Property(value="true")]
 		public var canDuck:Boolean = true;
 		
+		
+		
 		//events
 		/**
 		 * Dispatched whenever the hero jumps. 
@@ -114,6 +123,8 @@ package edu.cmu.monsterstem.objects
 		 */		
 		public var onTakeDamage:Signal;
 		
+		
+		
 		/**
 		 * Dispatched whenever the hero's animation changes. 
 		 */		
@@ -126,13 +137,19 @@ package edu.cmu.monsterstem.objects
 		protected var _hurtTimeoutID:Number;
 		protected var _hurt:Boolean = false;
 		protected var _friction:Number = 0.75;
-		protected var _playerMovingHero:Boolean = false;
-		protected var _controlsEnabled:Boolean = true;
-		protected var _ducking:Boolean = false;
+		//protected var _playerMovingHero:Boolean = false;
+		//protected var _controlsEnabled:Boolean = true;
+		//protected var _ducking:Boolean = false;
 		protected var _combinedGroundAngle:Number = 0;
+		protected var _walking:Boolean = false;
+		protected var _walkingDirection:V2 = RIGHT;
+		protected var _jumping:Boolean = false;
+		protected var _active:Boolean = true;
 		
-		public static function Make(name:String, x:Number, y:Number, width:Number, height:Number, legs:MonsterPart, arms:MonsterPart, head:MonsterPart):Monster {
-			return new Monster(name, { x: x, y: y, width: width, height: height, legs: legs, arms: arms, head: head } );
+		private var paramsMaster:Object;
+		
+		public static function Make(name:String, x:Number, y:Number, width:Number, height:Number):Monster {
+			return new Monster(name, { x: x, y: y, width: width, height: height} );
 		}
 		
 		/**
@@ -141,10 +158,32 @@ package edu.cmu.monsterstem.objects
 		public function Monster(name:String, params:Object = null) {
 			super(name, params);
 			view = null;
+
+			_animation = "default";
+			paramsMaster = params;
+			delete paramsMaster[view];
+			
 			onJump = new Signal();
 			onGiveDamage = new Signal();
 			onTakeDamage = new Signal();
-			onAnimationChange = new Signal();
+			onAnimationChange = new Signal();		
+		}
+		
+		public function initParts():void {
+			legs = MonsterPart.RandomLegs(name + "_legs", x, y, width, height);
+			armb = MonsterPart.RandomBackArm(name + "_armb", x, y, width, height);
+			armf = MonsterPart.RandomFrontArm(name + "_armf", x, y, width, height);
+			head = MonsterPart.RandomBody(name + "_body", x, y, width, height);
+			
+			legs.parent = this;
+			armb.parent = this;
+			armf.parent = this;
+			head.parent = this;
+			
+			_ce.state.add(legs);
+			_ce.state.add(armb);
+			_ce.state.add(abmf);
+			_ce.state.add(head);
 		}
 		
 		override public function destroy():void {
@@ -162,7 +201,7 @@ package edu.cmu.monsterstem.objects
 		/**
 		 * Whether or not the player can move and jump with the hero. 
 		 */	
-		public function get controlsEnabled():Boolean {
+		/*public function get controlsEnabled():Boolean {
 			return _controlsEnabled;
 		}
 		
@@ -171,6 +210,39 @@ package edu.cmu.monsterstem.objects
 			
 			if (!_controlsEnabled)
 				_fixture.SetFriction(_friction);
+		}*/
+		
+		public function get active():Boolean {
+			return _active;
+		}
+		
+		public function set active(value:Boolean):void {
+			_active = value;
+			
+			if (!_active) {
+				_fixture.SetFriction(_friction);
+			}
+		}
+		
+		
+		public function get walking():Boolean {
+			return _walking;
+		}
+		
+		public function set walking(value:Boolean):void {
+			_walking = value;
+			
+			if (!_walking) {
+				_fixture.SetFriction(_friction);
+			}
+		}
+		
+		public function get walkingDirection():V2 {
+			if (_walkingDirection.x >= 0)
+				return RIGHT;
+			else {
+				return LEFT;
+			}
 		}
 		
 		/**
@@ -213,45 +285,61 @@ package edu.cmu.monsterstem.objects
 			}
 		}
 		
+		
+		
 		override public function update(timeDelta:Number):void {
 			super.update(timeDelta);
 			
 			var velocity:V2 = _body.GetLinearVelocity();
 			
+			//if the monster is active, we'll see if active is really a thing or not.
+			if (_active) {
+				
+				//if it is being told to walk
+				if (_walking) {
+					//if the walking direction is to the right add to the velocity.
+					if(_walkingDirection.x >= 0) {
+						velocity = V2.add(velocity, getSlopeBasedMoveAngle());
+					}
+					
+					//otherwise if the walking direction to the left subtract from the velocity.
+					else if (_walkingDirection.x < 0) {
+						velocity = V2.subtract(velocity, getSlopeBasedMoveAngle());
+					}
+				}
+				
+				//if they are jumping then jump
+				//note this jumping variable should be set elsewhere
+				//basically set it to true when they are told to jump and they will next tick
+				//then set it to false when they touch the ground.
+				if (_jumping) {
+					if(_onGround) {
+						velocity.y = -jumpHeight;
+						onJump.dispatch();
+					}
+					else if (velocity.y < 0) {
+						velocity.y -= jumpAcceleration;
+					}
+				}
+				
+				//Cap velocities
+				if (velocity.x > (maxVelocity))
+					velocity.x = maxVelocity;
+				else if (velocity.x < (-maxVelocity))
+					velocity.x = -maxVelocity;
+				
+				//update physics with new velocity
+				_body.SetLinearVelocity(velocity);
+			}
+			
+			
+			/*
+			 * This is old code borrowed from the Hero class in the standard setits not actually used.
 			if (controlsEnabled) {
 				var moveKeyPressed:Boolean = false;
 				
 				_ducking = (_ce.input.isDown(Keyboard.DOWN) && _onGround && canDuck);
 				
-				if (_ce.input.isDown(Keyboard.RIGHT) && !_ducking) {
-					velocity = V2.add(velocity, getSlopeBasedMoveAngle());
-					moveKeyPressed = true;
-				}
-				
-				if (_ce.input.isDown(Keyboard.LEFT) && !_ducking) {
-					velocity = V2.subtract(velocity, getSlopeBasedMoveAngle());
-					moveKeyPressed = true;
-				}
-				
-				//If player just started moving the hero this tick.
-				if (moveKeyPressed && !_playerMovingHero) {
-					_playerMovingHero = true;
-					_fixture.SetFriction(0); //Take away friction so he can accelerate.
-				}
-				//Player just stopped moving the hero this tick.
-				else if (!moveKeyPressed && _playerMovingHero) {
-					_playerMovingHero = false;
-					_fixture.SetFriction(_friction); //Add friction so that he stops running
-				}
-				
-				if (_onGround && _ce.input.justPressed(Keyboard.SPACE) && !_ducking) {
-					velocity.y = -jumpHeight;
-					onJump.dispatch();
-				}
-				
-				if (_ce.input.isDown(Keyboard.SPACE) && !_onGround && velocity.y < 0) {
-					velocity.y -= jumpAcceleration;
-				}
 				
 				if (_springOffEnemy != -1) {
 					if (_ce.input.isDown(Keyboard.SPACE))
@@ -269,9 +357,32 @@ package edu.cmu.monsterstem.objects
 				
 				//update physics with new velocity
 				_body.SetLinearVelocity(velocity);
-			}
+			}*/
 			
 			updateAnimation();
+		}
+		
+		public function walk(direction:V2 = null):void {
+			if (direction == null)
+				direction = RIGHT;
+			_walkingDirection = direction;
+			_walking = true;
+			_fixture.SetFriction(0);
+		}
+		
+		public function turnAround():void {
+			if (_walking) {
+				_walkingDirection.multiplyN( -1);
+			}
+		}
+		
+		public function stop():void {
+			_walking = false;
+			_fixture.SetFriction(_friction);
+		}
+		
+		public function jump():void {
+			_jumping = true;
 		}
 		
 		/**
@@ -292,15 +403,15 @@ package edu.cmu.monsterstem.objects
 		 */		
 		public function hurt():void {
 			_hurt = true;
-			controlsEnabled = false;
+			//controlsEnabled = false;
 			_hurtTimeoutID = setTimeout(endHurtState, hurtDuration);
 			onTakeDamage.dispatch();
 			
 			//Makes sure that the hero is not frictionless while his control is disabled
-			if (_playerMovingHero) {
+			/*if (_playerMovingHero) {
 				_playerMovingHero = false;
 				_fixture.SetFriction(_friction);
-			}
+			}*/
 		}
 		
 		override protected function defineBody():void {
@@ -332,8 +443,8 @@ package edu.cmu.monsterstem.objects
 		}
 		
 		protected function handlePreSolve(e:ContactEvent):void {
-			if (!_ducking)
-				return;
+			/*if (!_ducking)
+				return;*/
 				
 			var other:PhysicsObject = e.other.GetBody().GetUserData() as PhysicsObject;
 			
@@ -359,10 +470,10 @@ package edu.cmu.monsterstem.objects
 						hurtVelocity.x = -hurtVelocityX;
 					_body.SetLinearVelocity(hurtVelocity);
 				}
-				else {
+				/*else {
 					_springOffEnemy = collider.y - height;
 					onGiveDamage.dispatch();
-				}
+				}*/
 			}
 			
 			
@@ -372,7 +483,14 @@ package edu.cmu.monsterstem.objects
 				if (collisionAngle > 45 && collisionAngle < 135) {
 					_groundContacts.push(e.other);
 					_onGround = true;
+					_jumping = false;
 					updateCombinedGroundAngle();
+				}
+				else {
+					/*if(e.other.GetBody().GetUserData() is Platform) {
+						turnAround();
+						CitrusEngine.dbg("collisionAngle: " + collisionAngle, this);
+					}*/
 				}
 			}
 		}
@@ -405,7 +523,7 @@ package edu.cmu.monsterstem.objects
 		
 		protected function endHurtState():void {
 			_hurt = false;
-			controlsEnabled = true;
+			//controlsEnabled = true;
 		}
 		
 		protected function updateAnimation():void {
@@ -418,9 +536,9 @@ package edu.cmu.monsterstem.objects
 			else if (!_onGround) {
 				_animation = "jump";
 			}
-			else if (_ducking) {
+			/*else if (_ducking) {
 				_animation = "duck";
-			}
+			}*/
 			else {
 				var walkingSpeed:Number = getWalkingSpeed();
 				if (walkingSpeed < -acceleration) {
