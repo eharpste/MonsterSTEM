@@ -49,16 +49,16 @@ package edu.cmu.monsterstem.objects.parts
 		private var _offsetX:Number;
 		private var _offsetY:Number;
 		private var _registration:String;
-		private var _type:String;
+		private var _species:String;
 		
 		public var onAnimationChange:Signal;
 		
 		public function set species(value:String):void {
-			_type = value;
+			_species = value;
 		}
 		
 		public function get species():String {
-			return _type;
+			return _species;
 		}
 		
 		[Property(value="0")]
@@ -255,8 +255,8 @@ package edu.cmu.monsterstem.objects.parts
 		}
 		
 		private function handleAnimationChange():void {
-			_animation = type + "-" + _parent.animation;
-			//CitrusEngine.dbg("animation: " + _animation, this);
+			_animation = species + "-" + _parent.animation;
+			trace("animation: " + _animation);
 			onAnimationChange.dispatch();
 		}
 		

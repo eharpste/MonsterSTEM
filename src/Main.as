@@ -2,31 +2,28 @@ package
 {
 	import com.citrusengine.core.CitrusEngine;
 	import com.citrusengine.core.CitrusObject;
-	import com.citrusengine.objects.CitrusSprite;
 	import com.citrusengine.objects.Box2DPhysicsObject;
-	import com.citrusengine.objects.platformer.box2d.Enemy;
+	import com.citrusengine.objects.CitrusSprite;
 	import com.citrusengine.objects.platformer.box2d.Coin;
 	import com.citrusengine.objects.platformer.box2d.Crate;
+	import com.citrusengine.objects.platformer.box2d.Enemy;
 	import com.citrusengine.objects.platformer.box2d.Hero;
 	import com.citrusengine.objects.platformer.box2d.Missile;
 	import com.citrusengine.objects.platformer.box2d.MovingPlatform;
 	import com.citrusengine.objects.platformer.box2d.Platform;
 	import com.citrusengine.objects.platformer.box2d.RewardBox;
 	import com.citrusengine.objects.platformer.box2d.Sensor;
-	import flash.display.Loader;
-	import flash.display.Sprite;
+	import edu.cmu.monsterstem.objects.Monster;
+	import edu.cmu.monsterstem.objects.MonsterGenerator;
+	import edu.cmu.monsterstem.state.ExampleState;
+	import edu.cmu.monsterstem.state.GoldSpikeState;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
-	import flash.ui.Keyboard;
-	import edu.cmu.monsterstem.state.ExampleState;
-	import edu.cmu.monsterstem.state.GoldSpikeState;
-	import edu.cmu.monsterstem.objects.Monster;
-	import edu.cmu.monsterstem.objects.TaggedSensor
-	import edu.cmu.monsterstem.objects.MonsterGenerator;
+	import flash.utils.describeType;
 	
 	public class Main extends CitrusEngine {
 		public var instructionText:TextField;
@@ -49,6 +46,8 @@ package
 			console.addCommand("clear", handleClearCommand);
 			console.addCommand("cls", handleClearCommand);
 			console.addCommand("debug", handleDebugCommand);
+			console.addCommand("properties", handlePropertiesCommand);
+			console.addCommand("props", handlePropertiesCommand);
 			
 			displayText("Press tab to open the console. Then type 'play levelName' where levelName is the name of the level file you made.\nFrom the console, you can use the up/down arrow keys to quickly access your previous commands.");
 			displayText("\n\nWhile in a level, you can turn the 'debug graphics' on and off by using this command: 'set Box2D visible true'",true);
@@ -126,6 +125,45 @@ package
 				debug = true;
 			else if (arg == "false")
 				debug = false;*/
+		}
+		
+		private function handlePropertiesCommand(arg:String):void {
+			var co:Object = state.getObjectByName(arg);
+			if (arg == null) {
+				displayText("CitrusObject: " + arg + " not found in state");
+				return;
+			}
+			//var names:Vector.<String> = new Vector.<String>();
+			var dispString:String = "";
+			
+			var varList:XMLList = flash.utils.describeType(co)..variable;
+			for each (var node:XML in varList) {
+				//names.push(node.@name);
+				dispString += node.@name +" : " + co[node.@name] + "\n";
+			}
+			var accList:XMLList = describeType(co)..accessor;
+			for each (var node:XML in accList) {
+				/*switch(node.@access) {
+					case "readonly" :
+						dispString += "R-"+node.@name +" : " + co[node.@name] + "\n";
+						break;
+					case "writeonline" :
+						dispString += "W-" + node.@name +" : " + co[node.@name] + "\n";
+						break;
+					case "readwrite" :
+						dispString += "RW-"+node.@name +" : " + co[node.@name] + "\n";
+				}*/
+				
+				
+				if (node.@access == "readwrite" ||node.@access == "readonly")
+					dispString += node.@name +" : " + co[node.@name] + "\n";
+			}
+			/*var dispString:String = varList.toXMLString();
+			for (var prop:String in names) {
+				//dispString += prop + "\n";
+				//dispString += prop +" : " + co[prop] + "\n";
+			}*/
+			displayText(dispString);
 		}
 		
 		public function displayText(message:String, append:Boolean = false):void {

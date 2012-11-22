@@ -1,5 +1,5 @@
 <GameState name="GoldSpike">
-  <CitrusObject name="ground" className="com.citrusengine.objects.platformer.Platform">
+  <CitrusObject name="ground" className="com.citrusengine.objects.platformer.box2d.Platform">
     <Property name="oneWay">false</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">608</Property>
@@ -25,7 +25,7 @@
     <Property name="bodyView">art/Patch_body.swf</Property>
     <Property name="legView">art/Patch_legs.swf</Property>
   </CitrusObject>
-  <CitrusObject name="rightSensor" className="com.citrusengine.objects.platformer.Sensor">
+  <CitrusObject name="rightSensor" className="com.citrusengine.objects.platformer.box2d.Sensor">
     <Property name="width">28</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">119</Property>
@@ -39,7 +39,7 @@
     <Property name="registration">center</Property>
     <Property name="height">104</Property>
   </CitrusObject>
-  <CitrusObject name="jumpSensor" className="com.citrusengine.objects.platformer.Sensor">
+  <CitrusObject name="jumpSensor" className="com.citrusengine.objects.platformer.box2d.Sensor">
     <Property name="width">30</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">602</Property>
@@ -53,7 +53,7 @@
     <Property name="registration">center</Property>
     <Property name="height">103</Property>
   </CitrusObject>
-  <CitrusObject name="Platform5" className="com.citrusengine.objects.platformer.Platform">
+  <CitrusObject name="Platform5" className="com.citrusengine.objects.platformer.box2d.Platform">
     <Property name="oneWay">false</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">1137</Property>
@@ -68,7 +68,7 @@
     <Property name="width">30</Property>
     <Property name="height">243</Property>
   </CitrusObject>
-  <CitrusObject name="Platform6" className="com.citrusengine.objects.platformer.Platform">
+  <CitrusObject name="Platform6" className="com.citrusengine.objects.platformer.box2d.Platform">
     <Property name="oneWay">false</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">79</Property>
@@ -83,7 +83,7 @@
     <Property name="width">30</Property>
     <Property name="height">250</Property>
   </CitrusObject>
-  <CitrusObject name="leftSensor" className="com.citrusengine.objects.platformer.Sensor">
+  <CitrusObject name="leftSensor" className="com.citrusengine.objects.platformer.box2d.Sensor">
     <Property name="width">30</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">1104</Property>

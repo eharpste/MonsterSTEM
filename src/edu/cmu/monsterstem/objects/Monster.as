@@ -52,19 +52,19 @@ package edu.cmu.monsterstem.objects
 		 * This is the fastest speed that the hero can move left or right. 
 		 */
 		[Property(value="8")]
-		public var maxVelocity:Number = 8;
+		public var maxVelocity:Number = 4;
 		
 		/**
 		 * This is the initial velocity that the hero will move at when he jumps.
 		 */
 		[Property(value="14")]
-		public var jumpHeight:Number = 14;
+		public var jumpHeight:Number = 7;
 		
 		/**
 		 * This is the amount of "float" that the hero has when the player holds the jump button while jumping. 
 		 */
 		[Property(value="0.9")]
-		public var jumpAcceleration:Number = 0.9;
+		public var jumpAcceleration:Number = 0.45;
 		
 		/**
 		 * This is the y velocity that the hero must be travelling in order to kill a Baddy.
@@ -164,7 +164,8 @@ package edu.cmu.monsterstem.objects
 
 			_animation = "default";
 			paramsMaster = params;
-			delete paramsMaster[view];
+			paramsMaster["registration"] = "center";
+			paramsMaster["visible"] = true;
 			
 			onJump = new Signal();
 			onGiveDamage = new Signal();
@@ -173,20 +174,31 @@ package edu.cmu.monsterstem.objects
 		}
 		
 		public function initParts():void {
-			legs = MonsterPart.RandomLegs(name + "_legs", x, y, width, height);
-			armb = MonsterPart.RandomBackArm(name + "_armb", x, y, width, height);
-			armf = MonsterPart.RandomFrontArm(name + "_armf", x, y, width, height);
-			head = MonsterPart.RandomBody(name + "_body", x, y, width, height);
+			
+			var armType:String = MonsterGenerator.randomType();
+			paramsMaster["view"] = MonsterPart.armBackSwf;
+			paramsMaster["species"] = armType;
+			armb = new MonsterPart(name + "_armb", paramsMaster);
+			paramsMaster["view"] = MonsterPart.legSwf;
+			paramsMaster["species"] = MonsterGenerator.randomType();
+			legs = new MonsterPart(name+"_legs", paramsMaster);
+			
+			paramsMaster["view"] = MonsterPart.armFrontSwf;
+			paramsMaster["species"] = armType;
+			armf = new MonsterPart(name + "_armf", paramsMaster);
+			paramsMaster["view"] = MonsterPart.bodySwf;
+			paramsMaster["species"] = MonsterGenerator.randomType();
+			head = new MonsterPart(name + "_body", paramsMaster);
 			
 			legs.parent = this;
 			armb.parent = this;
 			armf.parent = this;
 			head.parent = this;
 			
-			_ce.state.add(legs);
 			_ce.state.add(armb);
-			_ce.state.add(armf);
+			_ce.state.add(legs);
 			_ce.state.add(head);
+			_ce.state.add(armf);
 		}
 		
 		override public function destroy():void {
@@ -475,6 +487,7 @@ package edu.cmu.monsterstem.objects
 				{
 					_groundContacts.push(collider.body.GetFixtureList());
 					_onGround = true;
+					_jumping = false;
 					updateCombinedGroundAngle();
 				}
 			}

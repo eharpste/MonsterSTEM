@@ -1,5 +1,5 @@
 <GameState name="LevelOne">
-  <CitrusObject name="patch" className="com.citrusengine.objects.platformer.Hero">
+  <CitrusObject name="patch" className="com.citrusengine.objects.platformer.box2d.Hero">
     <Property name="acceleration">1</Property>
     <Property name="maxVelocity">8</Property>
     <Property name="jumpHeight">14</Property>
@@ -11,7 +11,7 @@
     <Property name="hurtVelocityX">6</Property>
     <Property name="hurtVelocityY">10</Property>
     <Property name="canDuck">true</Property>
-    <Property name="enemyClass">com.citrusengine.objects.platformer.Baddy</Property>
+    <Property name="enemyClass">com.citrusengine.objects.platformer.box2d.Enemy</Property>
     <Property name="friction">0.75</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">91</Property>
@@ -26,7 +26,7 @@
     <Property name="width">59.8</Property>
     <Property name="height">118.75</Property>
   </CitrusObject>
-  <CitrusObject name="ground" className="com.citrusengine.objects.platformer.Platform">
+  <CitrusObject name="ground" className="com.citrusengine.objects.platformer.box2d.Platform">
     <Property name="oneWay">false</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">334</Property>
@@ -41,8 +41,8 @@
     <Property name="width">554</Property>
     <Property name="height">30</Property>
   </CitrusObject>
-  <CitrusObject name="Coin7" className="com.citrusengine.objects.platformer.Coin">
-    <Property name="collectorClass">com.citrusengine.objects.platformer.Hero</Property>
+  <CitrusObject name="Coin7" className="com.citrusengine.objects.platformer.box2d.Coin">
+    <Property name="collectorClass">com.citrusengine.objects.platformer.box2d.Hero</Property>
     <Property name="width">31</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">301</Property>
@@ -56,8 +56,8 @@
     <Property name="registration">center</Property>
     <Property name="height">44</Property>
   </CitrusObject>
-  <CitrusObject name="Coin8" className="com.citrusengine.objects.platformer.Coin">
-    <Property name="collectorClass">com.citrusengine.objects.platformer.Hero</Property>
+  <CitrusObject name="Coin8" className="com.citrusengine.objects.platformer.box2d.Coin">
+    <Property name="collectorClass">com.citrusengine.objects.platformer.box2d.Hero</Property>
     <Property name="width">31</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">350</Property>
@@ -71,7 +71,7 @@
     <Property name="registration">center</Property>
     <Property name="height">44</Property>
   </CitrusObject>
-  <CitrusObject name="resetSensor" className="com.citrusengine.objects.platformer.Sensor">
+  <CitrusObject name="resetSensor" className="com.citrusengine.objects.platformer.box2d.Sensor">
     <Property name="width">1461</Property>
     <Property name="gravity">1.6</Property>
     <Property name="x">403.5</Property>

@@ -8,7 +8,7 @@ package edu.cmu.monsterstem.objects {
 	 * @author Erik Harpstead
 	 */
 	public class MonsterGenerator extends CitrusObject {
-		private static var types:Array = new Array("cat", "lizard", "crab", "slime", "bat");
+		private static var types:Array = new Array("cat", "lizard", "rock", "slime", "bat");
 		
 		public static function randomType():String {
 			return randomElement(types);
