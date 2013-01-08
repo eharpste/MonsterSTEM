@@ -1,4 +1,4 @@
-package 
+﻿package 
 {
 	import com.citrusengine.core.CitrusEngine;
 	import com.citrusengine.core.CitrusObject;
@@ -142,7 +142,7 @@ package
 				dispString += node.@name +" : " + co[node.@name] + "\n";
 			}
 			var accList:XMLList = describeType(co)..accessor;
-			for each (var node:XML in accList) {
+			for each (node in accList) {
 				/*switch(node.@access) {
 					case "readonly" :
 						dispString += "R-"+node.@name +" : " + co[node.@name] + "\n";

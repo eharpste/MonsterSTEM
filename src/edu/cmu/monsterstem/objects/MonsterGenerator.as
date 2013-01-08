@@ -15,7 +15,9 @@ package edu.cmu.monsterstem.objects {
 		}
 		
 		private static function randomElement(target:Array):* {
-			return target[Math.round(Math.random() * target.length)];
+			var dex:int = Math.round(Math.random() * target.length);
+			trace(dex);
+			return target[dex];
 		}
 		
 		private static var counter:int = 0;
@@ -83,7 +85,7 @@ package edu.cmu.monsterstem.objects {
 		
 		[Property(value="", browse="true")]
 		public function set armsFrontView(value:*):void {
-			MonsterPart.armFrontSwf = value;
+			//MonsterPart.armFrontSwf = value;
 		}
 		
 		public function get armsFrontView():* {
@@ -92,7 +94,7 @@ package edu.cmu.monsterstem.objects {
 		
 		[Property(value="",browse="true")]
 		public function set armsBackView(value:*):void {
-			MonsterPart.armBackSwf = value;
+			//MonsterPart.armBackSwf = value;
 		}
 		
 		public function get armsBackView():* {
@@ -101,7 +103,7 @@ package edu.cmu.monsterstem.objects {
 		
 		[Property(value="",browse="true")]
 		public function set bodyView(value:*):void {
-			MonsterPart.bodySwf = value;
+			//MonsterPart.bodySwf = value;
 		}
 		
 		public function get bodyView():* {
@@ -110,7 +112,7 @@ package edu.cmu.monsterstem.objects {
 		
 		[Property(value="",browse="true")]
 		public function set legView(value:*):void {
-			MonsterPart.legSwf = value;
+			//MonsterPart.legSwf = value;
 		}
 		
 		public function get legView():* {

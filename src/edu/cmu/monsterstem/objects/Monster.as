@@ -208,6 +208,11 @@ package edu.cmu.monsterstem.objects
 			onTakeDamage.removeAll();
 			onAnimationChange.removeAll();
 			
+			legs.kill = true;
+			armb.kill = true;
+			armf.kill = true;
+			head.kill = true;
+			
 			super.destroy();
 		}
 		

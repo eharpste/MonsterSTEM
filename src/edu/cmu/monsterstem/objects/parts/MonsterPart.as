@@ -13,25 +13,29 @@ package edu.cmu.monsterstem.objects.parts
 	 */
 	public class MonsterPart extends CitrusObject implements ISpriteView{
 		
-		/*[Embed(source = "/./art/Patch.swf", mimeType="application/octet-stream")]
-		private static var legSwf:Class;/**/
-		//private static var legSwf:String = "/./art/Patch_legs.swf";
-		public static var legSwf:*;
+		/*[Embed(source = "/./art/Patch_legs.swf")]
+		[Bindable]
+		public static var legSwf:Class;/**/
+		public static var legSwf:String = "./art/Patch_legs.swf";
+		//public static var legSwf:*;
 		
-		/*[Embed(source = "/./art/Patch_armFront.swf", mimeType="application/octet-stream")]
-		private static var armFrontSwf:Class;/**/
-		//private static var armFrontSwf:String = "/./art/Patch_armFront.swf";
-		public static var armFrontSwf:*;
+		/*[Embed(source = "/./art/Patch_armFront.swf")]
+		[Bindable]
+		public static var armFrontSwf:Class;/**/
+		public static var armFrontSwf:String = "./art/Patch_armFront.swf";
+		//public static var armFrontSwf:*;
 		
-		/*[Embed(source = "/./art/Patch_armBack.swf", mimeType="application/octet-stream")]
-		private static var armBackSwf:Class;/**/
-		//private static var armBackSwf:String = "/./art/Patch_armBack.swf";
-		public static var armBackSwf:*;
+		/*[Embed(source = "/./art/Patch_armBack.swf")]
+		[Bindable]
+		public static var armBackSwf:Class;/**/
+		public static var armBackSwf:String = "./art/Patch_armBack.swf";
+		//public static var armBackSwf:*;
 		
-		/*[Embed(source = "/./art/Patch_body.swf", mimeType="application/octet-stream")]
-		private static var bodySwf:Class;/**/
-		//private static var bodySwf:String = "/./art/Patch_body.swf";
-		public static var bodySwf:*;
+		/*[Embed(source = "/./art/Patch_body.swf")]
+		[Bindable]
+		public static var bodySwf:Class;/**/
+		public static var bodySwf:String = "./art/Patch_body.swf";
+		//public static var bodySwf:*;
 		
 		private var _parent:Monster;
 		
@@ -251,7 +255,8 @@ package edu.cmu.monsterstem.objects.parts
 		
 		override public function update(timeDelta:Number):void {
 			super.update(timeDelta);
-			syncToParent();
+			if(_parent)
+				syncToParent();
 		}
 		
 		private function handleAnimationChange():void {
@@ -262,6 +267,11 @@ package edu.cmu.monsterstem.objects.parts
 		
 		public function getBody():* {
 			return _parent.getBody();
+		}
+		
+		override public function destroy():void {
+			_parent = null;
+			super.destroy();
 		}
 	}
 }
